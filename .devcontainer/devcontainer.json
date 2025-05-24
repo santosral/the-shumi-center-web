@@ -1,0 +1,77 @@
+// For format details, see https://containers.dev/implementors/json_reference/.
+// For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
+{
+  "name": "the_shumi_center_web",
+  "dockerComposeFile": "compose.yaml",
+  "service": "rails-app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  // Mount SSH keys for GitHub authentication
+  "mounts": [
+    "source=${env:HOME}/.ssh/id_ed25519,target=/home/vscode/.ssh/id_ed25519,type=bind",
+    "source=${env:HOME}/.ssh/id_ed25519.pub,target=/home/vscode/.ssh/id_ed25519.pub,type=bind"
+  ],
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/rails/devcontainer/features/activestorage": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/rails/devcontainer/features/postgres-client": {}
+  },
+
+  "containerEnv": {
+    "CAPYBARA_SERVER_PORT": "45678",
+    "SELENIUM_HOST": "selenium",
+    "KAMAL_REGISTRY_PASSWORD": "$KAMAL_REGISTRY_PASSWORD",
+    "DB_HOST": "postgres"
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 5432],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.tabSize": 2,
+        "files.autoSave": "afterDelay",
+        "rubyLsp.enabledFeatures": {
+          "codeActions": true,
+          "diagnostics": true,
+          "documentHighlights": true,
+          "documentLink": true,
+          "documentSymbols": true,
+          "foldingRanges": true,
+          "formatting": true,
+          "hover": true,
+          "inlayHint": true,
+          "onTypeFormatting": true,
+          "selectionRanges": true,
+          "semanticHighlighting": true,
+          "completion": true,
+          "codeLens": true,
+          "definition": true,
+          "workspaceSymbol": true,
+          "signatureHelp": true,
+          "typeHierarchy": true
+        }
+      },
+      "extensions": [
+        "eamodio.gitlens",
+        "mikestead.dotenv"
+      ]
+    }
+  },
+
+  // Uncomment to connect as root instead. More info: https://containers.dev/implementors/json_reference/#remoteUser.
+  // "remoteUser": "root",
+
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "bin/setup --skip-server"
+}
